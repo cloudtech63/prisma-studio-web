@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prisma Studio 啟動器</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #2D3748;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1A202C;
+        }
+        .status {
+            margin-top: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prisma Studio 啟動器</h1>
+        <button onclick="startPrismaStudio()">啟動 Prisma Studio</button>
+        <p class="status" id="status"></p>
+    </div>
+
+    <script>
+        function startPrismaStudio() {
+            const status = document.getElementById('status');
+            status.textContent = '正在啟動 Prisma Studio...';
+            
+            // 使用 PowerShell 執行命令
+            const command = 'powershell.exe -Command "Start-Process powershell -ArgumentList \'npx prisma studio\' -WindowStyle Hidden"';
+            
+            // 創建一個隱藏的 iframe 來執行命令
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            try {
+                iframe.contentWindow.location.href = `command:${command}`;
+                status.textContent = 'Prisma Studio 已啟動！請在瀏覽器中打開 http://localhost:5555';
+                setTimeout(() => {
+                    window.open('http://localhost:5555', '_blank');
+                }, 2000);
+            } catch (error) {
+                status.textContent = '啟動失敗，請手動執行 npx prisma studio';
+            }
+            
+            // 清理 iframe
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+        }
+    </script>
+</body>
+</html> 

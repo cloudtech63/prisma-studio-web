@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  tel       String?   // 添加電話號碼字段
+  role      Role      @default(USER)
+  projects  Project[] // 用戶可以擁有多個專案
+  tasks     Task[]    // 用戶可以有多個任務
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  name        String    // 專案名稱
+  description String?   // 專案描述
+  status      Status    @default(ACTIVE)
+  startDate   DateTime  @default(now())
+  endDate     DateTime?
+  owner       User      @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  tasks       Task[]    // 專案包含多個任務
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String    // 任務標題
+  description String?   // 任務描述
+  status      TaskStatus @default(TODO)
+  priority    Priority   @default(MEDIUM)
+  dueDate     DateTime?
+  project     Project    @relation(fields: [projectId], references: [id])
+  projectId   String
+  assignee    User?      @relation(fields: [assigneeId], references: [id])
+  assigneeId  String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Status {
+  ACTIVE
+  COMPLETED
+  ON_HOLD
+  CANCELLED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
