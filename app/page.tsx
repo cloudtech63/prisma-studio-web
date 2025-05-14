@@ -3,6 +3,7 @@ export default function Home() {
     <main className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
+        // 測試 Vercel 部署
           Prisma Studio 網頁版
         </h1>
         <div className="space-y-4">
